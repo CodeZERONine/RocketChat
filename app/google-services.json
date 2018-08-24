@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "560512058533",
+    "firebase_url": "https://rocket-c4313.firebaseio.com",
+    "project_id": "rocket-c4313",
+    "storage_bucket": "rocket-c4313.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:560512058533:android:45aa0b8fcb7158a4",
+        "android_client_info": {
+          "package_name": "com.ebwebtech.rocket"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "560512058533-cjqvpnkv9f72d7lhb9849pkha5hu671s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ebwebtech.rocket",
+            "certificate_hash": "ea0d050a8bb7d7b74435a6fe57fa053f101df4cd"
+          }
+        },
+        {
+          "client_id": "560512058533-rc60c40r4itq8t94hmannrbrgt3cuhtl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB32itYKXYFaZ8ReSxvoOZOLYVFMRxt1eg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "560512058533-rc60c40r4itq8t94hmannrbrgt3cuhtl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
