@@ -1,6 +1,7 @@
 package com.ebwebtech.rocket;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -54,8 +55,19 @@ public class UsersActivity extends AppCompatActivity {
             @Override
             protected void populateViewHolder(UsersViewHolder viewHolder, ModelAllUsers model, int position) {
                       viewHolder.setName(model.getName());
-                      viewHolder.setImage(model.getImage(),UsersActivity.this);
+                      viewHolder.setImage(model.getThumb_image(),UsersActivity.this);
                       viewHolder.setStatus(model.getStatus());
+
+                      final String userd_id = getRef(position).getKey();
+
+                      viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                          @Override
+                          public void onClick(View v) {
+                                    Intent profileIntent = new Intent(UsersActivity.this,ProfileActivity.class);
+                                    profileIntent.putExtra("user_id",userd_id);
+                                    startActivity(profileIntent);
+                          }
+                      });
             }
         };
         firebaseRecyclerAdapter.startListening();

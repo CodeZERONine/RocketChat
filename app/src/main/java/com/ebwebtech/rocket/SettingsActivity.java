@@ -1,6 +1,7 @@
 package com.ebwebtech.rocket;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -27,9 +28,13 @@ import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.Random;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import id.zelory.compressor.Compressor;
 
 public class SettingsActivity extends AppCompatActivity implements View.OnClickListener{
     private TextView mName, mStatus;
@@ -39,6 +44,8 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     private FirebaseUser mCurrentUser;
     private DatabaseReference mUserDatabase;
     private StorageReference mStorageRef;
+    private StorageReference thumb_filepath;
+    byte[]      thumb_byte;
 
     private static final int GALLERY_REQUEST=1;
     @Override
@@ -112,8 +119,21 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
+                  Uri resultUri = result.getUri();
 
-                Uri resultUri = result.getUri();
+                  //Creating and storing Bitmap
+                File thumb_file = new File(resultUri.getPath());
+                try {
+                    Bitmap thumb_bitmap = new Compressor(this).setMaxHeight(200).setMaxWidth(200).setQuality(75).compressToBitmap(thumb_file);
+                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                    thumb_bitmap.compress(Bitmap.CompressFormat.JPEG,100,bos);
+                     thumb_byte = bos.toByteArray();
+                     thumb_filepath = mStorageRef.child("ProfilePictures").child("thumbs").child(mCurrentUser.getUid()+".jpg");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
                 //Now Store this URI to firebase storage
                    StorageReference filepath = mStorageRef.child("ProfilePictures").child(mCurrentUser.getUid()+".jpg");
                    filepath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
@@ -122,11 +142,27 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
                                    if(task.isSuccessful())
                                    {
                                        Toast.makeText(SettingsActivity.this, "Done", Toast.LENGTH_SHORT).show();
-                                       String downloadURL = task.getResult().getDownloadUrl().toString();
-                                       String downloadUrl = task.getResult().getDownloadUrl().toString();
                                        //Setting download link to databasem
+                                       String downloadURL = task.getResult().getDownloadUrl().toString();
 
-                                       mUserDatabase.child("image").setValue(downloadURL).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                       UploadTask uploadtask=thumb_filepath.putBytes(thumb_byte);
+                                       uploadtask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                           @Override
+                                           public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                                                      if(task.isSuccessful())
+                                                      {
+                                                          String downloadURL = task.getResult().getDownloadUrl().toString();
+                                                                 mUserDatabase.child("thumb_image").setValue(downloadURL).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                     @Override
+                                                                     public void onComplete(@NonNull Task<Void> task) {
+                                                                         Toast.makeText(SettingsActivity.this, "bitmap saved to database", Toast.LENGTH_SHORT).show();
+                                                                     }
+                                                                 });
+                                                      }
+                                           }
+                                       });
+
+                                        mUserDatabase.child("image").setValue(downloadURL).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                @Override
                                                                          public void onComplete(@NonNull Task<Void> task) {
                                                                                            if(task.isSuccessful())
