@@ -1,38 +1,50 @@
 package com.ebwebtech.rocket;
 
 public class ModelAllUsers {
-    private String mImage, mName, mStatus;
+    private String image, name, status,thumb_image;
+
+    public ModelAllUsers(String image, String name, String status, String thumb_image) {
+        this.image = image;
+        this.name = name;
+        this.status = status;
+        this.thumb_image = thumb_image;
+    }
 
     public ModelAllUsers() {
     }
 
-    public ModelAllUsers(String mImage, String mName, String mStatus) {
-        this.mImage = mImage;
-        this.mName = mName;
-        this.mStatus = mStatus;
+    public String getImage() {
+        return image;
     }
 
-    public String getmImage() {
-        return mImage;
+    public void setImage(String image) {
+        this.image = image;
     }
 
-    public void setmImage(String mImage) {
-        this.mImage = mImage;
+    public String getName() {
+        return name;
     }
 
-    public String getmName() {
-        return mName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setmName(String mName) {
-        this.mName = mName;
+    public String getStatus() {
+        return status;
     }
 
-    public String getmStatus() {
-        return mStatus;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public void setmStatus(String mStatus) {
-        this.mStatus = mStatus;
+    public String getThumb_image() {
+        return thumb_image;
+    }
+
+    public void setThumb_image(String thumb_image) {
+        this.thumb_image = thumb_image;
     }
 }
+
+
+

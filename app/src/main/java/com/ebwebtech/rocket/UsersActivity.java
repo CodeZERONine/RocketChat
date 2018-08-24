@@ -1,20 +1,26 @@
 package com.ebwebtech.rocket;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UsersActivity extends AppCompatActivity {
    private RecyclerView mRecyclerView;
@@ -28,6 +34,7 @@ public class UsersActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("All Users");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         mRecyclerView = findViewById(R.id.users_RecyclerView);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -37,12 +44,26 @@ public class UsersActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
+        FirebaseRecyclerAdapter<ModelAllUsers, UsersViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<ModelAllUsers, UsersViewHolder>
+                (
+                        ModelAllUsers.class,
+                        R.layout.single_all_users_layout,
+                        UsersViewHolder.class,
+                        mReference
+                ) {
+            @Override
+            protected void populateViewHolder(UsersViewHolder viewHolder, ModelAllUsers model, int position) {
+                      viewHolder.setName(model.getName());
+                      viewHolder.setImage(model.getImage(),UsersActivity.this);
+                      viewHolder.setStatus(model.getStatus());
+            }
+        };
+        firebaseRecyclerAdapter.startListening();
+          mRecyclerView.setAdapter(firebaseRecyclerAdapter);
     }
 
     public static class UsersViewHolder extends RecyclerView.ViewHolder {
         View mView;
-        String mImage, mName, mStatus;
         public UsersViewHolder(View itemView) {
             super(itemView);
             mView = itemView;
@@ -51,6 +72,15 @@ public class UsersActivity extends AppCompatActivity {
         {
             TextView userNameView = mView.findViewById(R.id.single_user_name);
             userNameView.setText(name);
+        }
+        public void setImage( String image,Context mContext){
+            CircleImageView userImageView = mView.findViewById(R.id.single_user_dp);
+            Glide.with(mContext).load(image).into(userImageView);
+        }
+        public void setStatus(String status)
+        {
+            TextView userStatusView = mView.findViewById(R.id.single_user_status);
+            userStatusView.setText(status);
         }
     }
 }

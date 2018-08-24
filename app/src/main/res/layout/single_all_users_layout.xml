@@ -30,6 +30,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="Joey Tribioni"
+        android:textColor="@color/colorBlack"
         android:textAlignment="textStart"
         android:textSize="18sp"
         android:textStyle="bold"
