@@ -65,7 +65,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         String mCurrentUID = mCurrentUser.getUid();
 
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(mCurrentUID);
-        
+
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
         mUserDatabase.addValueEventListener(new ValueEventListener() {

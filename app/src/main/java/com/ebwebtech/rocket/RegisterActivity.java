@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.HashMap;
 
@@ -63,7 +64,9 @@ public class RegisterActivity extends AppCompatActivity {
                              /* mDatabase.child("Users").child(UID);
                              both are correct
                               mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(UID);*/
-                              HashMap<String, String> userData = new HashMap<>();
+                             String token = FirebaseInstanceId.getInstance().getToken();
+                             HashMap<String, String> userData = new HashMap<>();
+                              userData.put("device_token",token);
                               userData.put("name",mDNameE.getText().toString().trim());
                               userData.put("status","Hey there! I am using Rocket");
                               userData.put("image","default");
