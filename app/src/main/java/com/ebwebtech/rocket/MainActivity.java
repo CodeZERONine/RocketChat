@@ -12,6 +12,8 @@ import android.webkit.WebView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -20,6 +22,8 @@ public class MainActivity extends AppCompatActivity
    private ViewPager mPager;
    private SectionsPagerAdapter mSectionsPagerAdapter;
    private TabLayout mTabs;
+   private DatabaseReference mUserDatabase;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -34,6 +38,7 @@ public class MainActivity extends AppCompatActivity
         mPager.setAdapter(mSectionsPagerAdapter);
         mTabs = findViewById(R.id.main_tabs);
         mTabs.setupWithViewPager(mPager );
+        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         }
 
     @Override
@@ -46,6 +51,16 @@ public class MainActivity extends AppCompatActivity
              //no user has logged in
              sendToStart();
          }
+         else
+         {
+             mUserDatabase.child("online").setValue(true);
+         }
+         }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mUserDatabase.child("online").setValue(false);
     }
 
     private void sendToStart() {

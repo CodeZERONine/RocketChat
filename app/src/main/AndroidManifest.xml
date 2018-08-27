@@ -14,6 +14,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:name=".Rocket">
+
+        <service
+            android:name=".FirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,7 +30,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".StartActivity" />
+        <activity android:name=".StartActivity" >
+
+        </activity>
         <activity android:name=".RegisterActivity" />
         <activity android:name=".SettingsActivity" />
         <activity
