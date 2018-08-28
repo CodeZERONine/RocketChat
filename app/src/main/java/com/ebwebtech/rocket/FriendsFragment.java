@@ -2,9 +2,12 @@ package com.ebwebtech.rocket;
 
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -66,17 +69,44 @@ static Context mContext;
             protected void populateViewHolder(final FriendsViewHolder viewHolder, ModelFriends model, int position) {
                              viewHolder.setDate(model.getDate());
 
-                             String list_users_id = getRef(position).getKey();
+                             final String list_users_id = getRef(position).getKey();
                              mUsersDatabaseReference.child(list_users_id).addValueEventListener(new ValueEventListener() {
                                  @Override
                                  public void onDataChange(DataSnapshot dataSnapshot) {
-                                     String userName = dataSnapshot.child("name").getValue().toString();
-                                     String userImage = dataSnapshot.child("thumb_image").getValue().toString();
-                                     boolean userOnlineStatus = (boolean)dataSnapshot.child("online").getValue();
+                                     final String userName = dataSnapshot.child("name").getValue().toString();
+                                     final String userImage = dataSnapshot.child("thumb_image").getValue().toString();
+                                     String userOnlineStatus = dataSnapshot.child("online").getValue().toString();
                                      Log.d("onlinestaturrrr", "onDataChange: "+ userOnlineStatus);
                                      viewHolder.setName(userName);
                                      viewHolder.setImage(userImage);
                                      viewHolder.setUserOnline(userOnlineStatus);
+                                     viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                                         @Override
+                                         public void onClick(View v) {
+                                             CharSequence options[] = new CharSequence[]{"Open profile","Send message"};
+                                             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                             builder.setItems(options, new DialogInterface.OnClickListener() {
+                                                 @Override
+                                                 public void onClick(DialogInterface dialog, int which) {
+                                                                  if(which == 0)
+                                                                  {
+                                                                      Intent k = new Intent(getActivity(),ProfileActivity.class);
+                                                                      k.putExtra("user_id",list_users_id);
+                                                                      startActivity(k);
+                                                                  }
+                                                                  if(which ==1)
+                                                                  {
+                                                                      Intent k = new Intent(getActivity(),ChatActivity.class);
+                                                                      k.putExtra("user_id",list_users_id);
+                                                                      k.putExtra("user_name",userName);
+                                                                      k.putExtra("user_image",userImage);
+                                                                      startActivity(k);
+                                                                  }
+                                                 }
+                                             });
+                                             builder.show();
+                                         }
+                                     });
                                  }
 
                                  @Override
@@ -110,14 +140,14 @@ static Context mContext;
             CircleImageView imageView = mView.findViewById(R.id.single_user_dp);
             Glide.with(mContext).load(image).into(imageView);
         }
-        public void setUserOnline(boolean status)
+        public void setUserOnline(String status)
         {
             ImageView onlineStatus = mView.findViewById(R.id.single_user_online);
-              if(status==true)
+              if(status.equals("true"))
               {
                   onlineStatus.setVisibility(View.VISIBLE);
               }
-              else if(status == false)
+              else
               {
                   onlineStatus.setVisibility(View.GONE);
               }

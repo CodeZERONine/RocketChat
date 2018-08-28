@@ -7,21 +7,18 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
+        android:name=".Rocket"
         android:allowBackup="true"
         android:icon="@mipmap/rocket"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/rocket"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:name=".Rocket">
-
-        <service
-            android:name=".FirebaseMessagingService">
+        android:theme="@style/AppTheme">
+        <service android:name=".FirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
 
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -30,9 +27,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".StartActivity" >
-
-        </activity>
+        <activity android:name=".StartActivity"></activity>
         <activity android:name=".RegisterActivity" />
         <activity android:name=".SettingsActivity" />
         <activity
@@ -44,7 +39,9 @@
         <activity
             android:name=".UsersActivity"
             android:parentActivityName=".MainActivity" />
-        <activity android:name=".ProfileActivity"></activity>
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".ChatActivity"
+            android:parentActivityName=".MainActivity"></activity>
     </application>
 
 </manifest>
